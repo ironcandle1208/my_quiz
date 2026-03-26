@@ -1,0 +1,107 @@
+:root {
+  color-scheme: light;
+  --bg: #f5f7fb;
+  --text: #1e2235;
+  --primary: #0f6adf;
+  --primary-soft: #dceafe;
+  --border: #d6dced;
+  --danger: #b93737;
+  --success: #1f8a4c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: radial-gradient(circle at 0% 0%, #ffffff, var(--bg));
+  color: var(--text);
+  font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", sans-serif;
+}
+
+a {
+  color: inherit;
+}
+
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 20px 80px;
+}
+
+h1,
+h2,
+h3 {
+  margin-top: 0;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 8px 24px rgba(30, 34, 53, 0.06);
+}
+
+.stack {
+  display: grid;
+  gap: 12px;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.button {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 600;
+}
+
+.button.secondary {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.button.danger {
+  background: #fee6e6;
+  color: var(--danger);
+}
+
+.input,
+.textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: inherit;
+  background: #fff;
+}
+
+.textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.muted {
+  color: #63708d;
+}
+
+.result-ok {
+  color: var(--success);
+  font-weight: 700;
+}
+
+.result-ng {
+  color: var(--danger);
+  font-weight: 700;
+}
