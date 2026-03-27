@@ -38,6 +38,11 @@ npm run dev
 - `POST /api/quizzes/:quizId/attempts`
   - 回答を受け取り、正誤判定と結果保存を実行
 
+## テスト
+```bash
+npm run test
+```
+
 ## 補足
 - D1 バインディング名は `DB` 固定です。
 - OpenNext で Cloudflare にデプロイする場合は、プロジェクトに合わせて build/deploy スクリプトを追加してください。
