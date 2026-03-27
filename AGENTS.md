@@ -9,4 +9,4 @@
 - プロジェクト構造を調べるときは以下のファイルを参照してください。また、プロジェクト構造が変化した場合はこのファイルも修正してください。
   mt_quiz/docs/structure.md
 - プロジェクト要件や初期設計に関する情報を調べるときは以下のファイルを参照してください。
-  my_quiz/docs/archetecture.md
+  my_quiz/docs/architecture.md
