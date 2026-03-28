@@ -44,7 +44,8 @@ my_quiz/
 ├── test
 │   ├── d1.test.ts
 │   ├── id.test.ts
-│   └── quiz-core.test.ts
+│   ├── quiz-core.test.ts
+│   └── quiz-repository.test.ts
 ├── tsconfig.json
 ├── types
 │   └── cloudflare.d.ts
@@ -96,6 +97,7 @@ my_quiz/
 | `test/d1.test.ts` | `lib/d1.ts` の単体テスト。 |
 | `test/id.test.ts` | `lib/id.ts` の単体テスト。 |
 | `test/quiz-core.test.ts` | `lib/quiz-core.ts` の単体テスト。 |
+| `test/quiz-repository.test.ts` | `lib/quiz-repository.ts` の単体テスト。 |
 | `tsconfig.json` | TypeScript コンパイル設定。 |
 | `types/` | グローバル型宣言を配置。 |
 | `types/cloudflare.d.ts` | D1 など Cloudflare 型の簡易宣言。 |
