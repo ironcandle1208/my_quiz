@@ -9,7 +9,7 @@ export default defineConfig({
   },
   test: {
     environment: "node",
-    // test ディレクトリ配下のテストファイルを対象にする
-    include: ["test/**/*.test.ts"]
+    // test ディレクトリ配下のテストファイル（ts/tsx）を対象にする
+    include: ["test/**/*.test.ts", "test/**/*.test.tsx"]
   }
 });
