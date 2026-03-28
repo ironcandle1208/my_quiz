@@ -1,6 +1,6 @@
 # フォルダ構成
 
-更新日: 2026-03-27
+更新日: 2026-03-28
 
 `node_modules` / `.next` / `.git` は除外しています。
 
@@ -42,6 +42,7 @@ my_quiz/
 ├── package-lock.json
 ├── package.json
 ├── test
+│   ├── api-routes.test.ts
 │   ├── d1.test.ts
 │   ├── id.test.ts
 │   ├── quiz-core.test.ts
@@ -94,6 +95,7 @@ my_quiz/
 | `package-lock.json` | npm 依存関係のロックファイル。 |
 | `package.json` | npm スクリプトと依存関係定義。 |
 | `test/` | 共通関数向けの単体テスト群。 |
+| `test/api-routes.test.ts` | API ルート（作問・取得・回答送信）の単体テスト。 |
 | `test/d1.test.ts` | `lib/d1.ts` の単体テスト。 |
 | `test/id.test.ts` | `lib/id.ts` の単体テスト。 |
 | `test/quiz-core.test.ts` | `lib/quiz-core.ts` の単体テスト。 |
