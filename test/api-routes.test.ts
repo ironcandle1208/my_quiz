@@ -32,6 +32,19 @@ function createJsonRequest(url: string, method: string, body: unknown): Request 
 }
 
 /**
+ * 不正なJSON本文を持つRequestを生成する。
+ */
+function createInvalidJsonRequest(url: string, method: string): Request {
+  return new Request(url, {
+    method,
+    headers: {
+      "content-type": "application/json",
+    },
+    body: "{",
+  });
+}
+
+/**
  * 動的ルートが受け取るparamsオブジェクトを生成する。
  */
 function createRouteParams(quizId: string): { params: Promise<{ quizId: string }> } {
@@ -147,6 +160,18 @@ describe("POST /api/quizzes", () => {
       error: "クイズ作成時にエラーが発生しました。",
     });
   });
+
+  test("不正なJSON本文の場合は500を返し、作問処理を呼ばない", async () => {
+    const request = createInvalidJsonRequest("http://localhost/api/quizzes", "POST");
+
+    const response = await postQuizzes(request);
+    const body = (await response.json()) as { error?: string };
+
+    expect(response.status).toBe(500);
+    expect(typeof body.error).toBe("string");
+    expect(body.error && body.error.length > 0).toBe(true);
+    expect(mockedCreateQuiz).not.toHaveBeenCalled();
+  });
 });
 
 describe("GET /api/quizzes/[quizId]", () => {
@@ -214,6 +239,17 @@ describe("GET /api/quizzes/[quizId]", () => {
 
     expect(response.status).toBe(500);
     await expect(response.json()).resolves.toEqual({ error: "DB接続失敗" });
+  });
+
+  test("Error以外の例外発生時は既定メッセージを返す", async () => {
+    mockedGetPublishedQuiz.mockRejectedValue("unexpected");
+
+    const response = await getQuizById(new Request("http://localhost"), createRouteParams("quiz-1"));
+
+    expect(response.status).toBe(500);
+    await expect(response.json()).resolves.toEqual({
+      error: "クイズ取得時にエラーが発生しました。",
+    });
   });
 });
 
@@ -292,5 +328,34 @@ describe("POST /api/quizzes/[quizId]/attempts", () => {
 
     expect(response.status).toBe(500);
     await expect(response.json()).resolves.toEqual({ error: "採点エラー" });
+  });
+
+  test("Error以外の例外発生時は既定メッセージを返す", async () => {
+    mockedSubmitAttempt.mockRejectedValue("unexpected");
+
+    const request = createJsonRequest("http://localhost/api/quizzes/quiz-1/attempts", "POST", {
+      selectedChoiceIdsByQuestionId: {
+        q1: "c1",
+      },
+    });
+
+    const response = await postAttempt(request, createRouteParams("quiz-1"));
+
+    expect(response.status).toBe(500);
+    await expect(response.json()).resolves.toEqual({
+      error: "正誤判定時にエラーが発生しました。",
+    });
+  });
+
+  test("不正なJSON本文の場合は500を返し、採点処理を呼ばない", async () => {
+    const request = createInvalidJsonRequest("http://localhost/api/quizzes/quiz-1/attempts", "POST");
+
+    const response = await postAttempt(request, createRouteParams("quiz-1"));
+    const body = (await response.json()) as { error?: string };
+
+    expect(response.status).toBe(500);
+    expect(typeof body.error).toBe("string");
+    expect(body.error && body.error.length > 0).toBe(true);
+    expect(mockedSubmitAttempt).not.toHaveBeenCalled();
   });
 });
