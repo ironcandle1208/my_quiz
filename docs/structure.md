@@ -42,14 +42,15 @@ my_quiz/
 ├── package-lock.json
 ├── package.json
 ├── test
-│   ├── api-routes.test.ts
-│   ├── create-quiz-form.test.tsx
-│   ├── d1.test.ts
-│   ├── id.test.ts
-│   ├── quiz-page.test.tsx
-│   ├── quiz-player.test.tsx
-│   ├── quiz-core.test.ts
-│   └── quiz-repository.test.ts
+│   └── unit
+│       ├── api-routes.test.ts
+│       ├── create-quiz-form.test.tsx
+│       ├── d1.test.ts
+│       ├── id.test.ts
+│       ├── quiz-page.test.tsx
+│       ├── quiz-player.test.tsx
+│       ├── quiz-core.test.ts
+│       └── quiz-repository.test.ts
 ├── tsconfig.json
 ├── types
 │   └── cloudflare.d.ts
@@ -97,15 +98,16 @@ my_quiz/
 | `next.config.ts` | Next.js の基本設定。 |
 | `package-lock.json` | npm 依存関係のロックファイル。 |
 | `package.json` | npm スクリプトと依存関係定義。 |
-| `test/` | 共通関数向けの単体テスト群。 |
-| `test/api-routes.test.ts` | API ルート（作問・取得・回答送信）の単体テスト。 |
-| `test/create-quiz-form.test.tsx` | 作問フォームの操作・送信処理に関する単体テスト。 |
-| `test/d1.test.ts` | `lib/d1.ts` の単体テスト。 |
-| `test/id.test.ts` | `lib/id.ts` の単体テスト。 |
-| `test/quiz-page.test.tsx` | クイズ表示ページの取得成功・404分岐に関する単体テスト。 |
-| `test/quiz-player.test.tsx` | 回答UIの選択・送信・判定結果表示に関する単体テスト。 |
-| `test/quiz-core.test.ts` | `lib/quiz-core.ts` の単体テスト。 |
-| `test/quiz-repository.test.ts` | `lib/quiz-repository.ts` の単体テスト。 |
+| `test/` | テスト関連ファイルのルートディレクトリ。 |
+| `test/unit/` | 単体テストを配置するディレクトリ。 |
+| `test/unit/api-routes.test.ts` | API ルート（作問・取得・回答送信）の単体テスト。 |
+| `test/unit/create-quiz-form.test.tsx` | 作問フォームの操作・送信処理に関する単体テスト。 |
+| `test/unit/d1.test.ts` | `lib/d1.ts` の単体テスト。 |
+| `test/unit/id.test.ts` | `lib/id.ts` の単体テスト。 |
+| `test/unit/quiz-page.test.tsx` | クイズ表示ページの取得成功・404分岐に関する単体テスト。 |
+| `test/unit/quiz-player.test.tsx` | 回答UIの選択・送信・判定結果表示に関する単体テスト。 |
+| `test/unit/quiz-core.test.ts` | `lib/quiz-core.ts` の単体テスト。 |
+| `test/unit/quiz-repository.test.ts` | `lib/quiz-repository.ts` の単体テスト。 |
 | `tsconfig.json` | TypeScript コンパイル設定。 |
 | `types/` | グローバル型宣言を配置。 |
 | `types/cloudflare.d.ts` | D1 など Cloudflare 型の簡易宣言。 |
