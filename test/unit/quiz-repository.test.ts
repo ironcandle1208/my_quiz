@@ -111,7 +111,9 @@ describe("createQuiz", () => {
       .mockReturnValueOnce("version-1")
       .mockReturnValueOnce("question-1")
       .mockReturnValueOnce("choice-1")
-      .mockReturnValueOnce("choice-2");
+      .mockReturnValueOnce("choice-2")
+      .mockReturnValueOnce("choice-3")
+      .mockReturnValueOnce("choice-4");
 
     const input: CreateQuizInput = {
       title: "  サンプルクイズ  ",
@@ -123,6 +125,8 @@ describe("createQuiz", () => {
           choices: [
             { body: "  選択肢A  ", isCorrect: true },
             { body: "  選択肢B  ", isCorrect: false },
+            { body: "  選択肢C  ", isCorrect: false },
+            { body: "  選択肢D  ", isCorrect: false },
           ],
         },
       ],
@@ -132,7 +136,7 @@ describe("createQuiz", () => {
 
     expect(result).toEqual({ quizId: "quiz-1", versionNo: 1 });
     expect(batchCalls).toHaveLength(1);
-    expect(batchCalls[0]).toHaveLength(5);
+    expect(batchCalls[0]).toHaveLength(7);
 
     const quizStatement = getStatementBySqlFragment(batchCalls[0], "INSERT INTO quizzes");
     expect(quizStatement.boundValues).toEqual(["quiz-1", "user-1", "サンプルクイズ", "説明です"]);
@@ -146,9 +150,11 @@ describe("createQuiz", () => {
     const choiceStatements = batchCalls[0].filter((statement) =>
       statement.query.includes("INSERT INTO choices"),
     );
-    expect(choiceStatements).toHaveLength(2);
+    expect(choiceStatements).toHaveLength(4);
     expect(choiceStatements[0].boundValues).toEqual(["choice-1", "question-1", 1, "選択肢A", 1]);
     expect(choiceStatements[1].boundValues).toEqual(["choice-2", "question-1", 2, "選択肢B", 0]);
+    expect(choiceStatements[2].boundValues).toEqual(["choice-3", "question-1", 3, "選択肢C", 0]);
+    expect(choiceStatements[3].boundValues).toEqual(["choice-4", "question-1", 4, "選択肢D", 0]);
   });
 
   test("入力バリデーションエラー時は DB 書き込み処理を実行しない", async () => {
@@ -185,7 +191,9 @@ describe("createQuiz", () => {
       .mockReturnValueOnce("version-1")
       .mockReturnValueOnce("question-1")
       .mockReturnValueOnce("choice-1")
-      .mockReturnValueOnce("choice-2");
+      .mockReturnValueOnce("choice-2")
+      .mockReturnValueOnce("choice-3")
+      .mockReturnValueOnce("choice-4");
 
     const input: CreateQuizInput = {
       title: "サンプルクイズ",
@@ -197,6 +205,8 @@ describe("createQuiz", () => {
           choices: [
             { body: "選択肢A", isCorrect: true },
             { body: "選択肢B", isCorrect: false },
+            { body: "選択肢C", isCorrect: false },
+            { body: "選択肢D", isCorrect: false },
           ],
         },
       ],

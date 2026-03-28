@@ -51,10 +51,12 @@ function fillMinimumForm(): void {
   fireEvent.change(textboxes[0], { target: { value: "設問本文" } });
   fireEvent.change(textboxes[1], { target: { value: "選択肢A" } });
   fireEvent.change(textboxes[2], { target: { value: "選択肢B" } });
+  fireEvent.change(textboxes[3], { target: { value: "選択肢C" } });
+  fireEvent.change(textboxes[4], { target: { value: "選択肢D" } });
 }
 
 describe("CreateQuizForm", () => {
-  test("初期表示で設問1件・選択肢2件を表示し、削除ボタンを無効化する", () => {
+  test("初期表示で設問1件・選択肢4件を表示し、正解を先頭に設定する", () => {
     render(<CreateQuizForm />);
 
     expect(screen.getByText("設問 1")).toBeInTheDocument();
@@ -65,44 +67,28 @@ describe("CreateQuizForm", () => {
     });
     expect(removeQuestionButton).toBeDisabled();
 
-    const removeChoiceButtons = screen.getAllByRole("button", {
-      name: "選択肢を削除",
-    });
-    expect(removeChoiceButtons).toHaveLength(2);
-    expect(removeChoiceButtons[0]).toBeDisabled();
-    expect(removeChoiceButtons[1]).toBeDisabled();
+    expect(screen.queryByRole("button", { name: "選択肢を追加" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "選択肢を削除" })).not.toBeInTheDocument();
 
     const correctChoiceRadios = screen.getAllByLabelText("この選択肢を正解にする");
-    expect(correctChoiceRadios).toHaveLength(2);
+    expect(correctChoiceRadios).toHaveLength(4);
     expect(correctChoiceRadios[0]).toBeChecked();
     expect(correctChoiceRadios[1]).not.toBeChecked();
+    expect(correctChoiceRadios[2]).not.toBeChecked();
+    expect(correctChoiceRadios[3]).not.toBeChecked();
   });
 
-  test("正解にした選択肢を削除した場合は先頭選択肢を正解に戻す", () => {
+  test("正解選択肢を切り替えると他の選択肢は未選択になる", () => {
     render(<CreateQuizForm />);
 
-    const questionCard = screen.getByText("設問 1").closest("article");
-    if (!questionCard) {
-      throw new Error("設問カードが見つかりません。");
-    }
-
-    fireEvent.click(within(questionCard).getByRole("button", { name: "選択肢を追加" }));
-
-    let correctChoiceRadios = screen.getAllByLabelText("この選択肢を正解にする");
-    expect(correctChoiceRadios).toHaveLength(3);
-
+    const correctChoiceRadios = screen.getAllByLabelText("この選択肢を正解にする");
     fireEvent.click(correctChoiceRadios[2]);
+
+    expect(correctChoiceRadios).toHaveLength(4);
     expect(correctChoiceRadios[2]).toBeChecked();
-
-    const removeChoiceButtons = screen.getAllByRole("button", {
-      name: "選択肢を削除",
-    });
-    fireEvent.click(removeChoiceButtons[2]);
-
-    correctChoiceRadios = screen.getAllByLabelText("この選択肢を正解にする");
-    expect(correctChoiceRadios).toHaveLength(2);
-    expect(correctChoiceRadios[0]).toBeChecked();
+    expect(correctChoiceRadios[0]).not.toBeChecked();
     expect(correctChoiceRadios[1]).not.toBeChecked();
+    expect(correctChoiceRadios[3]).not.toBeChecked();
   });
 
   test("送信成功時はAPIを呼び出してクイズ詳細ページへ遷移する", async () => {
@@ -153,6 +139,8 @@ describe("CreateQuizForm", () => {
           choices: [
             { body: "選択肢A", isCorrect: true },
             { body: "選択肢B", isCorrect: false },
+            { body: "選択肢C", isCorrect: false },
+            { body: "選択肢D", isCorrect: false },
           ],
         },
       ],
@@ -209,7 +197,8 @@ describe("CreateQuizForm", () => {
     if (!resolveFetch) {
       throw new Error("fetchの完了関数が設定されていません。");
     }
-    resolveFetch(createFetchResponse(201, { quizId: "quiz-2", versionNo: 1 }));
+    const completeFetch = resolveFetch as (value: Response) => void;
+    completeFetch(createFetchResponse(201, { quizId: "quiz-2", versionNo: 1 }));
 
     await waitFor(() => {
       expect(

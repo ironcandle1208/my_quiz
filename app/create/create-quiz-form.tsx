@@ -20,6 +20,8 @@ type CreateQuizResponse = {
   versionNo: number;
 };
 
+const CHOICE_COUNT = 4;
+
 /**
  * 新規選択肢の初期値を生成する。
  */
@@ -32,19 +34,23 @@ function createEmptyChoice(): DraftChoice {
 }
 
 /**
+ * 4択固定の初期選択肢配列を生成する。
+ */
+function createInitialChoices(): DraftChoice[] {
+  return Array.from({ length: CHOICE_COUNT }, (_, index) => ({
+    ...createEmptyChoice(),
+    isCorrect: index === 0
+  }));
+}
+
+/**
  * 新規設問の初期値を生成する。
  */
 function createEmptyQuestion(): DraftQuestion {
-  const choice1 = createEmptyChoice();
-  const choice2 = createEmptyChoice();
-
   return {
     id: crypto.randomUUID(),
     body: "",
-    choices: [
-      { ...choice1, isCorrect: true },
-      { ...choice2, isCorrect: false }
-    ]
+    choices: createInitialChoices()
   };
 }
 
@@ -84,22 +90,6 @@ export function CreateQuizForm() {
   }
 
   /**
-   * 選択肢を追加する。
-   */
-  function addChoice(questionId: string) {
-    setQuestions((prev) =>
-      prev.map((question) =>
-        question.id === questionId
-          ? {
-              ...question,
-              choices: [...question.choices, createEmptyChoice()]
-            }
-          : question
-      )
-    );
-  }
-
-  /**
    * 選択肢本文を更新する。
    */
   function updateChoiceBody(questionId: string, choiceId: string, body: string) {
@@ -128,30 +118,6 @@ export function CreateQuizForm() {
             }
           : question
       )
-    );
-  }
-
-  /**
-   * 選択肢を削除する。
-   */
-  function removeChoice(questionId: string, choiceId: string) {
-    setQuestions((prev) =>
-      prev.map((question) => {
-        if (question.id !== questionId) {
-          return question;
-        }
-
-        const nextChoices = question.choices.filter((choice) => choice.id !== choiceId);
-        // 選択肢削除後に正解が未設定になるケースを避けるため、先頭を正解に戻す。
-        if (!nextChoices.some((choice) => choice.isCorrect) && nextChoices[0]) {
-          nextChoices[0] = { ...nextChoices[0], isCorrect: true };
-        }
-
-        return {
-          ...question,
-          choices: nextChoices
-        };
-      })
     );
   }
 
@@ -238,17 +204,7 @@ export function CreateQuizForm() {
             <div className="stack">
               {question.choices.map((choice, choiceIndex) => (
                 <div className="card stack" key={choice.id}>
-                  <div className="row" style={{ justifyContent: "space-between" }}>
-                    <strong>選択肢 {choiceIndex + 1}</strong>
-                    <button
-                      className="button danger"
-                      type="button"
-                      onClick={() => removeChoice(question.id, choice.id)}
-                      disabled={question.choices.length <= 2}
-                    >
-                      選択肢を削除
-                    </button>
-                  </div>
+                  <strong>選択肢 {choiceIndex + 1}</strong>
                   <input
                     className="input"
                     value={choice.body}
@@ -266,9 +222,6 @@ export function CreateQuizForm() {
                   </label>
                 </div>
               ))}
-              <button className="button secondary" type="button" onClick={() => addChoice(question.id)}>
-                選択肢を追加
-              </button>
             </div>
           </article>
         ))}

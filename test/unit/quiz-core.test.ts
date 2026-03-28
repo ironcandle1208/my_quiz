@@ -19,6 +19,8 @@ describe("validateCreateQuizInput", () => {
           choices: [
             { body: "選択肢A", isCorrect: true },
             { body: "選択肢B", isCorrect: false },
+            { body: "選択肢C", isCorrect: false },
+            { body: "選択肢D", isCorrect: false },
           ],
         },
       ],
@@ -57,6 +59,8 @@ describe("validateCreateQuizInput", () => {
           choices: [
             { body: "A", isCorrect: true },
             { body: "B", isCorrect: true },
+            { body: "C", isCorrect: false },
+            { body: "D", isCorrect: false },
           ],
         },
       ],
@@ -64,6 +68,27 @@ describe("validateCreateQuizInput", () => {
 
     expect(() => validateCreateQuizInput(input)).toThrowError(
       "各設問の正解は1件だけ選択してください。",
+    );
+  });
+
+  test("選択肢数が4件ではない設問はエラー", () => {
+    const input: CreateQuizInput = {
+      title: "クイズ",
+      authorUserId: "user-1",
+      questions: [
+        {
+          body: "設問1",
+          choices: [
+            { body: "A", isCorrect: true },
+            { body: "B", isCorrect: false },
+            { body: "C", isCorrect: false },
+          ],
+        },
+      ],
+    };
+
+    expect(() => validateCreateQuizInput(input)).toThrowError(
+      "選択肢は各設問で4件ちょうど指定してください。",
     );
   });
 });

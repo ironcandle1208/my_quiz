@@ -187,7 +187,8 @@ describe("QuizPlayer", () => {
     if (!resolveFetch) {
       throw new Error("fetchの完了関数が設定されていません。");
     }
-    resolveFetch(
+    const completeFetch = resolveFetch as (value: Response) => void;
+    completeFetch(
       createFetchResponse(201, {
         attemptId: "attempt-2",
         score: 0,

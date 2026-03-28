@@ -6,6 +6,8 @@ export type JudgeChoiceRow = {
   is_correct: number;
 };
 
+const CHOICE_COUNT = 4;
+
 /**
  * 作問入力の妥当性を検証する。
  */
@@ -23,8 +25,8 @@ export function validateCreateQuizInput(input: CreateQuizInput): void {
       throw new Error("設問本文は必須です。");
     }
 
-    if (question.choices.length < 2) {
-      throw new Error("選択肢は各設問で2件以上必要です。");
+    if (question.choices.length !== CHOICE_COUNT) {
+      throw new Error("選択肢は各設問で4件ちょうど指定してください。");
     }
 
     const correctCount = question.choices.filter((choice) => choice.isCorrect).length;
