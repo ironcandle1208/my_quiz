@@ -46,6 +46,7 @@ my_quiz/
 │   ├── create-quiz-form.test.tsx
 │   ├── d1.test.ts
 │   ├── id.test.ts
+│   ├── quiz-player.test.tsx
 │   ├── quiz-core.test.ts
 │   └── quiz-repository.test.ts
 ├── tsconfig.json
@@ -100,6 +101,7 @@ my_quiz/
 | `test/create-quiz-form.test.tsx` | 作問フォームの操作・送信処理に関する単体テスト。 |
 | `test/d1.test.ts` | `lib/d1.ts` の単体テスト。 |
 | `test/id.test.ts` | `lib/id.ts` の単体テスト。 |
+| `test/quiz-player.test.tsx` | 回答UIの選択・送信・判定結果表示に関する単体テスト。 |
 | `test/quiz-core.test.ts` | `lib/quiz-core.ts` の単体テスト。 |
 | `test/quiz-repository.test.ts` | `lib/quiz-repository.ts` の単体テスト。 |
 | `tsconfig.json` | TypeScript コンパイル設定。 |
