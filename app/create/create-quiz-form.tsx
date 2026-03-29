@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 
 type DraftChoice = {
   id: string;
@@ -23,22 +23,26 @@ type CreateQuizResponse = {
 const CHOICE_COUNT = 4;
 
 /**
- * 新規選択肢の初期値を生成する。
+ * 設問シーケンス番号から設問IDを生成する。
  */
-function createEmptyChoice(): DraftChoice {
-  return {
-    id: crypto.randomUUID(),
-    body: "",
-    isCorrect: false
-  };
+function createQuestionId(questionSequenceNo: number): string {
+  return `question-${questionSequenceNo}`;
+}
+
+/**
+ * 設問シーケンス番号と選択肢順序から選択肢IDを生成する。
+ */
+function createChoiceId(questionSequenceNo: number, choiceOrderNo: number): string {
+  return `question-${questionSequenceNo}-choice-${choiceOrderNo}`;
 }
 
 /**
  * 4択固定の初期選択肢配列を生成する。
  */
-function createInitialChoices(): DraftChoice[] {
+function createInitialChoices(questionSequenceNo: number): DraftChoice[] {
   return Array.from({ length: CHOICE_COUNT }, (_, index) => ({
-    ...createEmptyChoice(),
+    id: createChoiceId(questionSequenceNo, index + 1),
+    body: "",
     isCorrect: index === 0
   }));
 }
@@ -46,11 +50,11 @@ function createInitialChoices(): DraftChoice[] {
 /**
  * 新規設問の初期値を生成する。
  */
-function createEmptyQuestion(): DraftQuestion {
+function createEmptyQuestion(questionSequenceNo: number): DraftQuestion {
   return {
-    id: crypto.randomUUID(),
+    id: createQuestionId(questionSequenceNo),
     body: "",
-    choices: createInitialChoices()
+    choices: createInitialChoices(questionSequenceNo)
   };
 }
 
@@ -61,7 +65,8 @@ export function CreateQuizForm() {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [questions, setQuestions] = useState<DraftQuestion[]>([createEmptyQuestion()]);
+  const [questions, setQuestions] = useState<DraftQuestion[]>([createEmptyQuestion(1)]);
+  const nextQuestionSequenceNoRef = useRef(2);
   const [authorUserId, setAuthorUserId] = useState("demo-user");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -70,7 +75,9 @@ export function CreateQuizForm() {
    * 設問を1件追加する。
    */
   function addQuestion() {
-    setQuestions((prev) => [...prev, createEmptyQuestion()]);
+    const questionSequenceNo = nextQuestionSequenceNoRef.current;
+    nextQuestionSequenceNoRef.current += 1;
+    setQuestions((prev) => [...prev, createEmptyQuestion(questionSequenceNo)]);
   }
 
   /**
