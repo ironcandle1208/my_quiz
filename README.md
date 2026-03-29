@@ -7,30 +7,47 @@
 - 正誤判定（回答送信とスコア保存）
 
 ## 技術スタック
+
 - Next.js（App Router / TypeScript）
 - Cloudflare Workers（Edge Runtime 想定）
 - Cloudflare D1（SQLite）
 
 ## セットアップ
+
 1. 依存関係をインストール
+
 ```bash
-npm install
+npm install -D wrangler@latest
 ```
+
 2. D1 データベースを作成（未作成の場合）
+
 ```bash
-wrangler d1 create my-quiz-db
+npx wrangler d1 create my-quiz-db
 ```
+
 3. `wrangler.jsonc` の `database_id` を実値に更新
-4. マイグレーション適用
+   "d1_databases": [
+   {
+   "binding": "DB",
+   "database_name": "my-quiz-db",
+   "database_id": "実際のデータベースID",
+   },
+   ]
+1. マイグレーション適用
+
 ```bash
-wrangler d1 execute my-quiz-db --file=./db/migrations/0001_init.sql --local
+npx wrangler d1 execute my-quiz-db --file=./db/migrations/0001_init.sql --local
 ```
-5. 開発サーバー起動
+
+1. 開発サーバー起動
+
 ```bash
 npm run dev
 ```
 
 ## API
+
 - `POST /api/quizzes`
   - クイズ作成（作成直後に公開済みとして version 1 を保存）
 - `GET /api/quizzes/:quizId`
@@ -39,10 +56,12 @@ npm run dev
   - 回答を受け取り、正誤判定と結果保存を実行
 
 ## テスト
+
 ```bash
 npm run test
 ```
 
 ## 補足
+
 - D1 バインディング名は `DB` 固定です。
 - OpenNext で Cloudflare にデプロイする場合は、プロジェクトに合わせて build/deploy スクリプトを追加してください。

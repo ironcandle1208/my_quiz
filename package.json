@@ -24,6 +24,7 @@
     "@types/react-dom": "19.2.2",
     "jsdom": "^29.0.1",
     "typescript": "5.9.3",
-    "vitest": "4.0.8"
+    "vitest": "4.0.8",
+    "wrangler": "^4.78.0"
   }
 }

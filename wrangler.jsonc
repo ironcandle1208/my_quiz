@@ -3,14 +3,12 @@
   "name": "my-quiz",
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-03-26",
-  "compatibility_flags": [
-    "nodejs_compat"
-  ],
+  "compatibility_flags": ["nodejs_compat"],
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "my-quiz-db",
-      "database_id": "REPLACE_WITH_YOUR_D1_DATABASE_ID"
-    }
-  ]
+      "database_id": "35a3fb25-a0b9-4ab9-b482-38b9cdcacfe4",
+    },
+  ],
 }
