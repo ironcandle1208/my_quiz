@@ -2,8 +2,6 @@ import { NextResponse } from "next/server";
 import type { SubmitAttemptInput } from "@/lib/domain";
 import { submitAttempt } from "@/lib/quiz-repository";
 
-export const runtime = "edge";
-
 type AttemptRouteProps = {
   params: Promise<{
     quizId: string;

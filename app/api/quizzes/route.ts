@@ -2,8 +2,6 @@ import { NextResponse } from "next/server";
 import type { CreateQuizInput } from "@/lib/domain";
 import { createQuiz } from "@/lib/quiz-repository";
 
-export const runtime = "edge";
-
 /**
  * 作問入力を受け取り、公開済みクイズを新規作成する。
  */

@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { getPublishedQuiz } from "@/lib/quiz-repository";
 
-export const runtime = "edge";
-
 type QuizRouteProps = {
   params: Promise<{
     quizId: string;
