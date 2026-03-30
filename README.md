@@ -40,10 +40,26 @@ npx wrangler d1 create my-quiz-db
 npx wrangler d1 execute my-quiz-db --file=./db/migrations/0001_init.sql --local
 ```
 
-1. 開発サーバー起動
+1. 開発サーバー起動（Next.js）
 
 ```bash
 npm run dev
+```
+
+1. Cloudflare Workers 互換で起動する場合
+
+```bash
+# OpenNext ビルド
+npm run build:cf
+
+# Wrangler 起動
+npm run dev:cf
+```
+
+または build + dev をまとめて実行:
+
+```bash
+npm run dev:cf:build
 ```
 
 ## API
@@ -64,4 +80,4 @@ npm run test
 ## 補足
 
 - D1 バインディング名は `DB` 固定です。
-- OpenNext で Cloudflare にデプロイする場合は、プロジェクトに合わせて build/deploy スクリプトを追加してください。
+- Cloudflare 向けビルドは `npm run build:cf`、ローカル実行は `npm run dev:cf` で実行できます。
