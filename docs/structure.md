@@ -1,8 +1,8 @@
 # フォルダ構成
 
-更新日: 2026-03-29
+更新日: 2026-03-30
 
-`node_modules` / `.next` / `.git` は除外しています。
+`node_modules` / `.next` / `.open-next` / `.git` は除外しています。
 
 ```text
 my_quiz/
@@ -32,7 +32,10 @@ my_quiz/
 │   ├── architecture.md
 │   └── structure.md
 ├── issues
-│   └── issue_report_0001.md
+│   ├── issue_report_0001.md
+│   ├── issue_report_0002.md
+│   ├── issue_report_0003.md
+│   └── issue_report_0004.md
 ├── lib
 │   ├── d1.ts
 │   ├── domain.ts
@@ -41,6 +44,7 @@ my_quiz/
 │   └── quiz-repository.ts
 ├── next-env.d.ts
 ├── next.config.ts
+├── open-next.config.ts
 ├── package-lock.json
 ├── package.json
 ├── test
@@ -92,6 +96,9 @@ my_quiz/
 | `docs/structure.md`                   | フォルダ構成と各要素説明を記載。                               |
 | `issues/`                             | 障害/不具合修正時の障害記録票を管理。                          |
 | `issues/issue_report_0001.md`         | Hydration 警告の障害記録票（ID: 0001）。                       |
+| `issues/issue_report_0002.md`         | D1 バインディング不一致の障害記録票（ID: 0002）。              |
+| `issues/issue_report_0003.md`         | ASSETS バインディング不足の障害記録票（ID: 0003）。            |
+| `issues/issue_report_0004.md`         | Worker エントリ未生成の障害記録票（ID: 0004）。               |
 | `lib/`                                | 共通ロジックやリポジトリ層を配置。                             |
 | `lib/d1.ts`                           | D1 バインディングを解決する共通関数。                          |
 | `lib/domain.ts`                       | ドメイン型定義（作問入力、公開クイズ、回答結果など）。         |
@@ -100,6 +107,7 @@ my_quiz/
 | `lib/quiz-repository.ts`              | D1 への永続化・取得処理（作問、取得、判定保存）。              |
 | `next-env.d.ts`                       | Next.js が生成する型定義参照ファイル。                         |
 | `next.config.ts`                      | Next.js の基本設定。                                           |
+| `open-next.config.ts`                 | OpenNext の Cloudflare 向けビルド設定。                        |
 | `package-lock.json`                   | npm 依存関係のロックファイル。                                 |
 | `package.json`                        | npm スクリプトと依存関係定義。                                 |
 | `test/`                               | テスト関連ファイルのルートディレクトリ。                       |
