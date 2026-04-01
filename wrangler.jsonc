@@ -13,6 +13,7 @@
       "binding": "DB",
       "database_name": "my-quiz-db",
       "database_id": "35a3fb25-a0b9-4ab9-b482-38b9cdcacfe4",
+      "migrations_dir": "db/migrations",
     },
   ],
 }

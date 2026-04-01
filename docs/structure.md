@@ -1,6 +1,6 @@
 # フォルダ構成
 
-更新日: 2026-03-30
+更新日: 2026-04-01
 
 `node_modules` / `.next` / `.open-next` / `.git` は除外しています。
 
@@ -8,6 +8,7 @@
 my_quiz/
 ├── .gitignore
 ├── AGENTS.md
+├── Makefile
 ├── README.md
 ├── app
 │   ├── api
@@ -35,7 +36,8 @@ my_quiz/
 │   ├── issue_report_0001.md
 │   ├── issue_report_0002.md
 │   ├── issue_report_0003.md
-│   └── issue_report_0004.md
+│   ├── issue_report_0004.md
+│   └── issue_report_0005.md
 ├── lib
 │   ├── d1.ts
 │   ├── domain.ts
@@ -47,6 +49,9 @@ my_quiz/
 ├── open-next.config.ts
 ├── package-lock.json
 ├── package.json
+├── scripts
+│   ├── apply_d1_migrations.sh
+│   └── reset_d1_tables.sh
 ├── test
 │   └── unit
 │       ├── api-routes.test.ts
@@ -71,6 +76,7 @@ my_quiz/
 | `my_quiz/`                            | プロジェクトルート。アプリ本体と設定、ドキュメントを管理する。 |
 | `.gitignore`                          | Git 管理対象から除外するファイル・ディレクトリ定義。           |
 | `AGENTS.md`                           | エージェント実行時の作業ルールや指示をまとめたファイル。       |
+| `Makefile`                            | D1 初期化やマイグレーション適用を実行するためのタスク定義。     |
 | `README.md`                           | セットアップ手順、実行方法、API概要を記載した案内。            |
 | `app/`                                | Next.js App Router の画面・API 実装を配置する。                |
 | `app/api/`                            | API ルート群の配置ディレクトリ。                               |
@@ -98,7 +104,8 @@ my_quiz/
 | `issues/issue_report_0001.md`         | Hydration 警告の障害記録票（ID: 0001）。                       |
 | `issues/issue_report_0002.md`         | D1 バインディング不一致の障害記録票（ID: 0002）。              |
 | `issues/issue_report_0003.md`         | ASSETS バインディング不足の障害記録票（ID: 0003）。            |
-| `issues/issue_report_0004.md`         | Worker エントリ未生成の障害記録票（ID: 0004）。               |
+| `issues/issue_report_0004.md`         | Worker エントリ未生成の障害記録票（ID: 0004）。                |
+| `issues/issue_report_0005.md`         | API 500（Cloudflare Context参照不備）の障害記録票（ID: 0005）。|
 | `lib/`                                | 共通ロジックやリポジトリ層を配置。                             |
 | `lib/d1.ts`                           | D1 バインディングを解決する共通関数。                          |
 | `lib/domain.ts`                       | ドメイン型定義（作問入力、公開クイズ、回答結果など）。         |
@@ -110,6 +117,9 @@ my_quiz/
 | `open-next.config.ts`                 | OpenNext の Cloudflare 向けビルド設定。                        |
 | `package-lock.json`                   | npm 依存関係のロックファイル。                                 |
 | `package.json`                        | npm スクリプトと依存関係定義。                                 |
+| `scripts/`                            | 開発・運用で使う補助スクリプトを配置。                         |
+| `scripts/apply_d1_migrations.sh`      | D1 の未適用マイグレーションを適用する実行スクリプト。          |
+| `scripts/reset_d1_tables.sh`          | D1 テーブルと移行管理テーブルを初期化する実行スクリプト。      |
 | `test/`                               | テスト関連ファイルのルートディレクトリ。                       |
 | `test/unit/`                          | 単体テストを配置するディレクトリ。                             |
 | `test/unit/api-routes.test.ts`        | API ルート（作問・取得・回答送信）の単体テスト。               |
