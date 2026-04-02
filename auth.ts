@@ -80,5 +80,11 @@ export const authOptions: NextAuthOptions = {
  * サーバー側で利用する現在のセッション情報を返す。
  */
 export async function getAppSession() {
-  return getServerSession(authOptions);
+  try {
+    return await getServerSession(authOptions);
+  } catch (error) {
+    // セッション取得に失敗しても画面を継続表示できるように未ログイン扱いへフォールバックする。
+    console.error("セッション取得に失敗しました。未ログインとして処理を継続します。", error);
+    return null;
+  }
 }

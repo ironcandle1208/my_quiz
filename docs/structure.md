@@ -62,9 +62,15 @@ my_quiz/
 ├── test
 │   └── unit
 │       ├── api-routes.test.ts
+│       ├── auth.test.ts
+│       ├── create-page-auth.test.tsx
 │       ├── create-quiz-form.test.tsx
 │       ├── d1.test.ts
+│       ├── home-page-auth.test.tsx
 │       ├── id.test.ts
+│       ├── login-form.test.tsx
+│       ├── login-page.test.tsx
+│       ├── logout-button.test.tsx
 │       ├── quiz-page.test.tsx
 │       ├── quiz-player.test.tsx
 │       ├── quiz-core.test.ts
@@ -138,9 +144,15 @@ my_quiz/
 | `test/`                               | テスト関連ファイルのルートディレクトリ。                       |
 | `test/unit/`                          | 単体テストを配置するディレクトリ。                             |
 | `test/unit/api-routes.test.ts`        | API ルート（作問・取得・回答送信）の単体テスト。               |
+| `test/unit/auth.test.ts`              | `auth.ts` の callback 挙動に関する単体テスト。                 |
+| `test/unit/create-page-auth.test.tsx` | 作問ページの認証ガードに関する単体テスト。                     |
 | `test/unit/create-quiz-form.test.tsx` | 作問フォームの操作・送信処理に関する単体テスト。               |
 | `test/unit/d1.test.ts`                | `lib/d1.ts` の単体テスト。                                     |
+| `test/unit/home-page-auth.test.tsx`   | トップページのログイン状態表示分岐に関する単体テスト。         |
 | `test/unit/id.test.ts`                | `lib/id.ts` の単体テスト。                                     |
+| `test/unit/login-form.test.tsx`       | ログインフォームの送信・エラー表示に関する単体テスト。         |
+| `test/unit/login-page.test.tsx`       | ログインページのリダイレクト・入力値受け渡しの単体テスト。     |
+| `test/unit/logout-button.test.tsx`    | ログアウトボタンの送信処理に関する単体テスト。                 |
 | `test/unit/quiz-page.test.tsx`        | クイズ表示ページの取得成功・404分岐に関する単体テスト。        |
 | `test/unit/quiz-player.test.tsx`      | 回答UIの選択・送信・判定結果表示に関する単体テスト。           |
 | `test/unit/quiz-core.test.ts`         | `lib/quiz-core.ts` の単体テスト。                              |

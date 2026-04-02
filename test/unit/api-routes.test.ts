@@ -86,6 +86,31 @@ describe("POST /api/quizzes", () => {
     expect(mockedCreateQuiz).not.toHaveBeenCalled();
   });
 
+  test("セッションに user.id がない場合は401を返す", async () => {
+    mockedGetAppSession.mockResolvedValue({
+      user: {
+        id: "",
+        name: "session-user-1",
+        email: null,
+        image: null
+      },
+      expires: "9999-12-31T23:59:59.999Z"
+    });
+
+    const request = createJsonRequest("http://localhost/api/quizzes", "POST", {
+      title: "クイズ",
+      questions: []
+    });
+
+    const response = await postQuizzes(request);
+
+    expect(response.status).toBe(401);
+    await expect(response.json()).resolves.toEqual({
+      error: "ログインが必要です。"
+    });
+    expect(mockedCreateQuiz).not.toHaveBeenCalled();
+  });
+
   test("必須項目が不足している場合は400を返す", async () => {
     const request = createJsonRequest("http://localhost/api/quizzes", "POST", {
       title: "クイズ",
