@@ -1,6 +1,6 @@
 # フォルダ構成
 
-更新日: 2026-04-01
+更新日: 2026-04-02
 
 `node_modules` / `.next` / `.open-next` / `.git` は除外しています。
 
@@ -10,8 +10,11 @@ my_quiz/
 ├── AGENTS.md
 ├── Makefile
 ├── README.md
+├── auth.ts
 ├── app
 │   ├── api
+│   │   ├── auth
+│   │   │   └── [...nextauth]
 │   │   └── quizzes
 │   │       ├── [quizId]
 │   │       └── route.ts
@@ -20,7 +23,11 @@ my_quiz/
 │   │   └── page.tsx
 │   ├── globals.css
 │   ├── layout.tsx
+│   ├── login
+│   │   ├── login-form.tsx
+│   │   └── page.tsx
 │   ├── not-found.tsx
+│   ├── logout-button.tsx
 │   ├── page.tsx
 │   └── quiz
 │       └── [quizId]
@@ -64,7 +71,8 @@ my_quiz/
 │       └── quiz-repository.test.ts
 ├── tsconfig.json
 ├── types
-│   └── cloudflare.d.ts
+│   ├── cloudflare.d.ts
+│   └── next-auth.d.ts
 ├── vitest.config.ts
 └── wrangler.jsonc
 ```
@@ -78,8 +86,11 @@ my_quiz/
 | `AGENTS.md`                           | エージェント実行時の作業ルールや指示をまとめたファイル。       |
 | `Makefile`                            | D1 初期化やマイグレーション適用を実行するためのタスク定義。     |
 | `README.md`                           | セットアップ手順、実行方法、API概要を記載した案内。            |
+| `auth.ts`                             | Auth.js（next-auth）の設定と `getAppSession` を提供。           |
 | `app/`                                | Next.js App Router の画面・API 実装を配置する。                |
 | `app/api/`                            | API ルート群の配置ディレクトリ。                               |
+| `app/api/auth/`                       | Auth.js の API ルートを配置。                                  |
+| `app/api/auth/[...nextauth]/route.ts` | Auth.js のハンドラを公開する API ルート。                      |
 | `app/api/quizzes/`                    | クイズ関連 API のルートをまとめる。                            |
 | `app/api/quizzes/route.ts`            | クイズ作成 API（`POST /api/quizzes`）を実装。                  |
 | `app/api/quizzes/[quizId]/`           | クイズID単位の API ルートを配置。                              |
@@ -88,7 +99,11 @@ my_quiz/
 | `app/create/page.tsx`                 | 作問画面のページエントリ。                                     |
 | `app/globals.css`                     | アプリ全体の共通スタイル定義。                                 |
 | `app/layout.tsx`                      | 全ページ共通レイアウト。                                       |
+| `app/login/`                          | ログイン画面関連の UI を配置。                                 |
+| `app/login/login-form.tsx`            | 認証情報入力とログイン送信を担当するフォーム。                 |
+| `app/login/page.tsx`                  | ログイン画面のページエントリ。                                 |
 | `app/not-found.tsx`                   | 404 ページ表示。                                               |
+| `app/logout-button.tsx`               | クライアント側でログアウトを実行するボタン。                   |
 | `app/page.tsx`                        | トップページ。                                                 |
 | `app/quiz/`                           | クイズ回答画面関連を配置。                                     |
 | `app/quiz/[quizId]/`                  | クイズID単位の回答ページ実装。                                 |
@@ -133,5 +148,6 @@ my_quiz/
 | `tsconfig.json`                       | TypeScript コンパイル設定。                                    |
 | `types/`                              | グローバル型宣言を配置。                                       |
 | `types/cloudflare.d.ts`               | D1 など Cloudflare 型の簡易宣言。                              |
+| `types/next-auth.d.ts`                | NextAuth の `Session.user.id` 拡張型定義。                     |
 | `vitest.config.ts`                    | Vitest 実行設定（対象、エイリアスなど）。                      |
 | `wrangler.jsonc`                      | Cloudflare Workers / D1 のデプロイ設定。                       |

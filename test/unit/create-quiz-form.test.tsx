@@ -120,7 +120,6 @@ describe("CreateQuizForm", () => {
     const requestBody = JSON.parse(String(init.body)) as {
       title: string;
       description: string;
-      authorUserId: string;
       questions: Array<{
         body: string;
         choices: Array<{
@@ -132,7 +131,6 @@ describe("CreateQuizForm", () => {
     expect(requestBody).toEqual({
       title: "都道府県クイズ",
       description: "",
-      authorUserId: "demo-user",
       questions: [
         {
           body: "設問本文",

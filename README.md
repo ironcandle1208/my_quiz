@@ -5,12 +5,32 @@
 - 作問（クイズ作成）
 - 問題表示（公開クイズ表示）
 - 正誤判定（回答送信とスコア保存）
+- ログイン（Auth.js / Credentials）
 
 ## 技術スタック
 
 - Next.js（App Router / TypeScript）
+- Auth.js（next-auth）
 - Cloudflare Workers（Edge Runtime 想定）
 - Cloudflare D1（SQLite）
+
+## 認証（Auth.js）
+
+- 認証方式は Credentials です。
+- デフォルトのログイン情報は以下です。
+  - ユーザー名: `demo`
+  - パスワード: `demo-pass`
+- 作問画面（`/create`）と作問 API（`POST /api/quizzes`）はログイン必須です。
+
+必要に応じて以下の環境変数で認証情報を上書きできます。
+
+```bash
+AUTH_SECRET=十分に長いランダム文字列
+AUTH_TRUST_HOST=true
+AUTH_DEMO_USERNAME=demo
+AUTH_DEMO_PASSWORD=demo-pass
+AUTH_DEMO_USER_ID=demo-user
+```
 
 ## セットアップ
 
@@ -64,8 +84,10 @@ npm run dev:cf:build
 
 ## API
 
+- `GET/POST /api/auth/*`
+  - Auth.js の認証エンドポイント
 - `POST /api/quizzes`
-  - クイズ作成（作成直後に公開済みとして version 1 を保存）
+  - ログインユーザーとしてクイズ作成（作成直後に公開済みとして version 1 を保存）
 - `GET /api/quizzes/:quizId`
   - 公開中クイズ取得（正解情報は返さない）
 - `POST /api/quizzes/:quizId/attempts`

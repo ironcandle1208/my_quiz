@@ -3,6 +3,7 @@ import { POST as postQuizzes } from "@/app/api/quizzes/route";
 import { GET as getQuizById } from "@/app/api/quizzes/[quizId]/route";
 import { POST as postAttempt } from "@/app/api/quizzes/[quizId]/attempts/route";
 import { createQuiz, getPublishedQuiz, submitAttempt } from "@/lib/quiz-repository";
+import { getAppSession } from "@/auth";
 
 vi.mock("@/lib/quiz-repository", () => ({
   createQuiz: vi.fn(),
@@ -10,12 +11,26 @@ vi.mock("@/lib/quiz-repository", () => ({
   submitAttempt: vi.fn(),
 }));
 
+vi.mock("@/auth", () => ({
+  getAppSession: vi.fn(),
+}));
+
 const mockedCreateQuiz = vi.mocked(createQuiz);
 const mockedGetPublishedQuiz = vi.mocked(getPublishedQuiz);
 const mockedSubmitAttempt = vi.mocked(submitAttempt);
+const mockedGetAppSession = vi.mocked(getAppSession);
 
 beforeEach(() => {
   vi.clearAllMocks();
+  mockedGetAppSession.mockResolvedValue({
+    user: {
+      id: "session-user-1",
+      name: "session-user-1",
+      email: null,
+      image: null,
+    },
+    expires: "9999-12-31T23:59:59.999Z",
+  });
 });
 
 /**
@@ -54,17 +69,33 @@ function createRouteParams(quizId: string): { params: Promise<{ quizId: string }
 }
 
 describe("POST /api/quizzes", () => {
+  test("未ログイン時は401を返す", async () => {
+    mockedGetAppSession.mockResolvedValue(null);
+
+    const request = createJsonRequest("http://localhost/api/quizzes", "POST", {
+      title: "クイズ",
+      questions: [],
+    });
+
+    const response = await postQuizzes(request);
+
+    expect(response.status).toBe(401);
+    await expect(response.json()).resolves.toEqual({
+      error: "ログインが必要です。",
+    });
+    expect(mockedCreateQuiz).not.toHaveBeenCalled();
+  });
+
   test("必須項目が不足している場合は400を返す", async () => {
     const request = createJsonRequest("http://localhost/api/quizzes", "POST", {
       title: "クイズ",
-      authorUserId: "user-1",
     });
 
     const response = await postQuizzes(request);
 
     expect(response.status).toBe(400);
     await expect(response.json()).resolves.toEqual({
-      error: "title, authorUserId, questions は必須です。",
+      error: "title, questions は必須です。",
     });
     expect(mockedCreateQuiz).not.toHaveBeenCalled();
   });
@@ -78,7 +109,6 @@ describe("POST /api/quizzes", () => {
     const request = createJsonRequest("http://localhost/api/quizzes", "POST", {
       title: "都道府県クイズ",
       description: "説明",
-      authorUserId: "user-1",
       questions: [
         {
           body: "設問1",
@@ -100,7 +130,7 @@ describe("POST /api/quizzes", () => {
     expect(mockedCreateQuiz).toHaveBeenCalledWith({
       title: "都道府県クイズ",
       description: "説明",
-      authorUserId: "user-1",
+      authorUserId: "session-user-1",
       questions: [
         {
           body: "設問1",
@@ -118,7 +148,6 @@ describe("POST /api/quizzes", () => {
 
     const request = createJsonRequest("http://localhost/api/quizzes", "POST", {
       title: "都道府県クイズ",
-      authorUserId: "user-1",
       questions: [
         {
           body: "設問1",
@@ -141,7 +170,6 @@ describe("POST /api/quizzes", () => {
 
     const request = createJsonRequest("http://localhost/api/quizzes", "POST", {
       title: "都道府県クイズ",
-      authorUserId: "user-1",
       questions: [
         {
           body: "設問1",

@@ -1,9 +1,16 @@
 import { CreateQuizForm } from "@/app/create/create-quiz-form";
+import { getAppSession } from "@/auth";
+import { redirect } from "next/navigation";
 
 /**
  * 作問画面を表示するページ。
  */
-export default function CreatePage() {
+export default async function CreatePage() {
+  const session = await getAppSession();
+  if (!session?.user?.id) {
+    redirect("/login?callbackUrl=/create");
+  }
+
   return (
     <main className="stack">
       <section className="card">

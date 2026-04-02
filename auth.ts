@@ -1,0 +1,84 @@
+import { getServerSession, type NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+
+type AuthorizedUser = {
+  id: string;
+  name: string;
+};
+
+/**
+ * 認証情報の値を文字列として安全に取り出す。
+ */
+function toCredentialString(value: unknown): string {
+  return typeof value === "string" ? value : "";
+}
+
+/**
+ * 入力された認証情報を検証し、許可ユーザー情報を返す。
+ */
+function authorizeWithCredentialValues(credentials: Record<string, unknown> | undefined): AuthorizedUser | null {
+  const username = toCredentialString(credentials?.username).trim();
+  const password = toCredentialString(credentials?.password);
+
+  const expectedUsername = process.env.AUTH_DEMO_USERNAME ?? "demo";
+  const expectedPassword = process.env.AUTH_DEMO_PASSWORD ?? "demo-pass";
+  const expectedUserId = process.env.AUTH_DEMO_USER_ID ?? "demo-user";
+
+  if (username !== expectedUsername || password !== expectedPassword) {
+    return null;
+  }
+
+  return {
+    id: expectedUserId,
+    name: expectedUsername,
+  };
+}
+
+export const authOptions: NextAuthOptions = {
+  session: {
+    strategy: "jwt",
+  },
+  providers: [
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        username: { label: "ユーザー名", type: "text" },
+        password: { label: "パスワード", type: "password" },
+      },
+      /**
+       * ログインフォームの認証情報を検証し、セッション化するユーザーを返す。
+       */
+      authorize(credentials) {
+        return authorizeWithCredentialValues(credentials);
+      },
+    }),
+  ],
+  callbacks: {
+    /**
+     * 認証済みユーザーの ID を JWT へ保存する。
+     */
+    jwt({ token, user }) {
+      if (user?.id) {
+        token.userId = user.id;
+      }
+      return token;
+    },
+
+    /**
+     * JWT セッションから `user.id` を復元してアプリ側で参照しやすくする。
+     */
+    session({ session, token }) {
+      if (session.user && typeof token.userId === "string") {
+        session.user.id = token.userId;
+      }
+      return session;
+    },
+  },
+};
+
+/**
+ * サーバー側で利用する現在のセッション情報を返す。
+ */
+export async function getAppSession() {
+  return getServerSession(authOptions);
+}

@@ -1,6 +1,6 @@
 # Next.js クイズ作成アプリ 低コスト運用構成案（Cloudflare寄せ）
 
-更新日: 2026-03-26
+更新日: 2026-04-02
 
 ## 目的
 - 自作クイズを作成・公開できる Web アプリを、Next.js を使って構築する
@@ -28,11 +28,13 @@
 - 画像は R2 直配信に寄せ、Workers 経由レスポンスを減らす
 
 ## 認証方針（Auth.js）
-- 認証基盤は Auth.js（next-auth v5 系）を採用する
-- 永続化は Cloudflare D1 + `@auth/d1-adapter` を利用する
-- Free 運用を優先するため、セッション戦略は `session.strategy = "jwt"` を基本とする
-- 環境変数は最低限 `AUTH_SECRET` と `AUTH_TRUST_HOST=true` を設定する
-- v5 は更新変化を考慮し、依存バージョンを固定して段階的にアップデートする
+- 認証基盤は Auth.js（next-auth v4 系）を採用する
+- 現行 MVP では Credentials Provider（ID/Password）でログインする
+- Free 運用を優先するため、セッション戦略は `session.strategy = "jwt"` を利用する
+- 作問ページ（`/create`）と作問 API（`POST /api/quizzes`）はログイン必須にする
+- `author_user_id` はクライアント入力ではなく、セッションの `user.id` を利用する
+- 環境変数は `AUTH_SECRET` / `AUTH_TRUST_HOST=true` / `AUTH_DEMO_USERNAME` / `AUTH_DEMO_PASSWORD` / `AUTH_DEMO_USER_ID` を設定可能とする
+- Cloudflare D1 + `@auth/d1-adapter` は将来的な永続セッション導入時に検討する
 
 ## 初期データモデル（D1 例）
 - `users`
@@ -143,9 +145,9 @@ CREATE INDEX idx_attempts_quiz_submitted
 - Workers pricing: https://developers.cloudflare.com/workers/platform/pricing/
 - Workers limits: https://developers.cloudflare.com/workers/platform/limits/
 - Next.js on Workers: https://developers.cloudflare.com/workers/framework-guides/web-apps/nextjs/
-- Auth.js D1 Adapter: https://authjs.dev/getting-started/adapters/d1
-- Auth.js Deployment: https://authjs.dev/getting-started/deployment
-- Auth.js Edge Compatibility: https://authjs.dev/guides/edge-compatibility
+- NextAuth.js Options (v4): https://next-auth.js.org/configuration/options
+- NextAuth.js Credentials Provider (v4): https://next-auth.js.org/providers/credentials
+- Auth.js D1 Adapter（将来導入時）: https://authjs.dev/getting-started/adapters/d1
 - D1 pricing: https://developers.cloudflare.com/d1/platform/pricing/
 - R2 pricing: https://developers.cloudflare.com/r2/pricing/
 - Turnstile plans: https://developers.cloudflare.com/turnstile/plans/

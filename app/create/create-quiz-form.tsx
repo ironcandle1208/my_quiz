@@ -67,7 +67,6 @@ export function CreateQuizForm() {
   const [description, setDescription] = useState("");
   const [questions, setQuestions] = useState<DraftQuestion[]>([createEmptyQuestion(1)]);
   const nextQuestionSequenceNoRef = useRef(2);
-  const [authorUserId, setAuthorUserId] = useState("demo-user");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -145,7 +144,6 @@ export function CreateQuizForm() {
         body: JSON.stringify({
           title,
           description,
-          authorUserId,
           questions: questions.map((question) => ({
             body: question.body,
             choices: question.choices.map((choice) => ({
@@ -180,10 +178,6 @@ export function CreateQuizForm() {
         <label className="stack">
           <span>説明</span>
           <textarea className="textarea" value={description} onChange={(event) => setDescription(event.target.value)} />
-        </label>
-        <label className="stack">
-          <span>作成者ID（Auth.js連携時はセッション値を使用）</span>
-          <input className="input" value={authorUserId} onChange={(event) => setAuthorUserId(event.target.value)} required />
         </label>
 
         {questions.map((question, questionIndex) => (

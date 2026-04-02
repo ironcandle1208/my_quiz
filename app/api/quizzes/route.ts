@@ -1,22 +1,28 @@
 import { NextResponse } from "next/server";
 import type { CreateQuizInput } from "@/lib/domain";
 import { createQuiz } from "@/lib/quiz-repository";
+import { getAppSession } from "@/auth";
 
 /**
  * 作問入力を受け取り、公開済みクイズを新規作成する。
  */
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as Partial<CreateQuizInput>;
+    const session = await getAppSession();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "ログインが必要です。" }, { status: 401 });
+    }
 
-    if (!body.title || !body.authorUserId || !body.questions) {
-      return NextResponse.json({ error: "title, authorUserId, questions は必須です。" }, { status: 400 });
+    const body = (await request.json()) as Partial<Omit<CreateQuizInput, "authorUserId">>;
+
+    if (!body.title || !body.questions) {
+      return NextResponse.json({ error: "title, questions は必須です。" }, { status: 400 });
     }
 
     const result = await createQuiz({
       title: body.title,
       description: body.description,
-      authorUserId: body.authorUserId,
+      authorUserId: session.user.id,
       questions: body.questions
     });
 
