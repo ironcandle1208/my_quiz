@@ -26,6 +26,12 @@ a {
   color: inherit;
 }
 
+.text-link {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .app-header {
   border-bottom: 1px solid var(--border);
   background: rgba(255, 255, 255, 0.9);

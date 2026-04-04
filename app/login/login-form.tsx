@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -95,6 +96,12 @@ export function LoginForm({ callbackUrl, initialErrorCode }: LoginFormProps) {
         </button>
         {errorMessage ? <p className="result-ng">{errorMessage}</p> : null}
       </form>
+      <p className="muted">
+        アカウントをお持ちでない場合は{" "}
+        <Link className="text-link" href="/register">
+          新規登録
+        </Link>
+      </p>
     </section>
   );
 }

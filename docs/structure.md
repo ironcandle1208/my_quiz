@@ -1,6 +1,6 @@
 # フォルダ構成
 
-更新日: 2026-04-02
+更新日: 2026-04-04
 
 `node_modules` / `.next` / `.open-next` / `.git` は除外しています。
 
@@ -15,6 +15,8 @@ my_quiz/
 │   ├── api
 │   │   ├── auth
 │   │   │   └── [...nextauth]
+│   │   ├── register
+│   │   │   └── route.ts
 │   │   └── quizzes
 │   │       ├── [quizId]
 │   │       └── route.ts
@@ -30,6 +32,9 @@ my_quiz/
 │   ├── not-found.tsx
 │   ├── logout-button.tsx
 │   ├── page.tsx
+│   ├── register
+│   │   ├── page.tsx
+│   │   └── register-form.tsx
 │   └── quiz
 │       └── [quizId]
 │           ├── page.tsx
@@ -48,6 +53,7 @@ my_quiz/
 │   ├── issue_report_0005.md
 │   └── issue_report_0006.md
 ├── lib
+│   ├── credential-user-store.ts
 │   ├── d1.ts
 │   ├── domain.ts
 │   ├── id.ts
@@ -73,6 +79,9 @@ my_quiz/
 │       ├── id.test.ts
 │       ├── login-form.test.tsx
 │       ├── login-page.test.tsx
+│       ├── register-form.test.tsx
+│       ├── register-page.test.tsx
+│       ├── register-route.test.ts
 │       ├── logout-button.test.tsx
 │       ├── quiz-page.test.tsx
 │       ├── quiz-player.test.tsx
@@ -100,6 +109,7 @@ my_quiz/
 | `app/api/`                            | API ルート群の配置ディレクトリ。                               |
 | `app/api/auth/`                       | Auth.js の API ルートを配置。                                  |
 | `app/api/auth/[...nextauth]/route.ts` | Auth.js のハンドラを公開する API ルート。                      |
+| `app/api/register/route.ts`           | 資格情報ユーザーの新規登録 API（`POST /api/register`）を実装。 |
 | `app/api/quizzes/`                    | クイズ関連 API のルートをまとめる。                            |
 | `app/api/quizzes/route.ts`            | クイズ作成 API（`POST /api/quizzes`）を実装。                  |
 | `app/api/quizzes/[quizId]/`           | クイズID単位の API ルートを配置。                              |
@@ -115,6 +125,9 @@ my_quiz/
 | `app/not-found.tsx`                   | 404 ページ表示。                                               |
 | `app/logout-button.tsx`               | クライアント側でログアウトを実行するボタン。                   |
 | `app/page.tsx`                        | トップページ。                                                 |
+| `app/register/`                       | 新規登録画面関連の UI を配置。                                 |
+| `app/register/page.tsx`               | 新規登録画面のページエントリ。                                 |
+| `app/register/register-form.tsx`      | 新規登録送信と登録後の遷移処理を担当するフォーム。             |
 | `app/quiz/`                           | クイズ回答画面関連を配置。                                     |
 | `app/quiz/[quizId]/`                  | クイズID単位の回答ページ実装。                                 |
 | `app/quiz/[quizId]/page.tsx`          | クイズ表示ページ（問題取得と描画）。                           |
@@ -133,6 +146,7 @@ my_quiz/
 | `issues/issue_report_0005.md`         | API 500（Cloudflare Context参照不備）の障害記録票（ID: 0005）。|
 | `issues/issue_report_0006.md`         | セッション取得例外時のフォールバック不備の障害記録票（ID: 0006）。|
 | `lib/`                                | 共通ロジックやリポジトリ層を配置。                             |
+| `lib/credential-user-store.ts`        | Credentials 認証ユーザーの登録・認証用メモリストア。           |
 | `lib/d1.ts`                           | D1 バインディングを解決する共通関数。                          |
 | `lib/domain.ts`                       | ドメイン型定義（作問入力、公開クイズ、回答結果など）。         |
 | `lib/id.ts`                           | UUID 生成ユーティリティ。                                      |
@@ -158,6 +172,9 @@ my_quiz/
 | `test/unit/id.test.ts`                | `lib/id.ts` の単体テスト。                                     |
 | `test/unit/login-form.test.tsx`       | ログインフォームの送信・エラー表示に関する単体テスト。         |
 | `test/unit/login-page.test.tsx`       | ログインページのリダイレクト・入力値受け渡しの単体テスト。     |
+| `test/unit/register-form.test.tsx`    | 新規登録フォームの送信・遷移・エラー表示に関する単体テスト。   |
+| `test/unit/register-page.test.tsx`    | 新規登録ページの表示と認証済みリダイレクトの単体テスト。       |
+| `test/unit/register-route.test.ts`    | 新規登録 API のステータスとレスポンスの単体テスト。            |
 | `test/unit/logout-button.test.tsx`    | ログアウトボタンの送信処理に関する単体テスト。                 |
 | `test/unit/quiz-page.test.tsx`        | クイズ表示ページの取得成功・404分岐に関する単体テスト。        |
 | `test/unit/quiz-player.test.tsx`      | 回答UIの選択・送信・判定結果表示に関する単体テスト。           |

@@ -65,8 +65,9 @@ describe("authOptions.callbacks", () => {
       session,
       token: { userId: "user-2" }
     } as never);
+    const userId = result.user && "id" in result.user ? result.user.id : undefined;
 
-    expect(result.user.id).toBe("user-2");
+    expect(userId).toBe("user-2");
   });
 
   test("session callback は token.userId がない場合に session.user.id を変更しない", async () => {
@@ -87,8 +88,9 @@ describe("authOptions.callbacks", () => {
       session,
       token: {}
     } as never);
+    const userId = result.user && "id" in result.user ? result.user.id : undefined;
 
-    expect(result.user.id).toBeUndefined();
+    expect(userId).toBeUndefined();
   });
 });
 

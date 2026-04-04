@@ -1,5 +1,6 @@
 import { getServerSession, type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { authenticateCredentialUser } from "@/lib/credential-user-store";
 
 type AuthorizedUser = {
   id: string;
@@ -19,18 +20,14 @@ function toCredentialString(value: unknown): string {
 function authorizeWithCredentialValues(credentials: Record<string, unknown> | undefined): AuthorizedUser | null {
   const username = toCredentialString(credentials?.username).trim();
   const password = toCredentialString(credentials?.password);
-
-  const expectedUsername = process.env.AUTH_DEMO_USERNAME ?? "demo";
-  const expectedPassword = process.env.AUTH_DEMO_PASSWORD ?? "demo-pass";
-  const expectedUserId = process.env.AUTH_DEMO_USER_ID ?? "demo-user";
-
-  if (username !== expectedUsername || password !== expectedPassword) {
+  const user = authenticateCredentialUser(username, password);
+  if (!user) {
     return null;
   }
 
   return {
-    id: expectedUserId,
-    name: expectedUsername,
+    id: user.id,
+    name: user.username,
   };
 }
 

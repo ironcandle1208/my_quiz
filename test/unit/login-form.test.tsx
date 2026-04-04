@@ -8,6 +8,7 @@ import { signIn } from "next-auth/react";
 
 const mockPush = vi.fn();
 const mockRefresh = vi.fn();
+type SignInResult = Awaited<ReturnType<typeof signIn>>;
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({
@@ -40,6 +41,14 @@ function fillMinimumLoginInput(): void {
 }
 
 describe("LoginForm", () => {
+  test("新規登録ページへのリンクを表示する", () => {
+    render(<LoginForm callbackUrl="/create" initialErrorCode={null} />);
+
+    const registerLink = screen.getByRole("link", { name: "新規登録" });
+    expect(registerLink).toBeInTheDocument();
+    expect(registerLink).toHaveAttribute("href", "/register");
+  });
+
   test("初期エラーコードが CredentialsSignin の場合はエラーメッセージを表示する", () => {
     render(<LoginForm callbackUrl="/create" initialErrorCode="CredentialsSignin" />);
 
@@ -49,7 +58,7 @@ describe("LoginForm", () => {
   test("ログイン成功時は signIn を呼び出して callbackUrl へ遷移する", async () => {
     mockedSignIn.mockResolvedValue({
       ok: true,
-      error: undefined,
+      error: null,
       status: 200,
       url: "/create"
     });
@@ -96,10 +105,15 @@ describe("LoginForm", () => {
   });
 
   test("送信中はボタン文言を切り替えて無効化する", async () => {
-    let resolveSignIn: ((value: unknown) => void) | null = null;
+    /**
+     * signIn の完了をテスト側で制御するための完了関数。
+     */
+    let resolveSignIn: (value: SignInResult) => void = () => {
+      throw new Error("signIn の完了関数が設定されていません。");
+    };
     mockedSignIn.mockImplementation(
       () =>
-        new Promise((resolve) => {
+        new Promise<SignInResult>((resolve) => {
           resolveSignIn = resolve;
         })
     );
@@ -113,14 +127,9 @@ describe("LoginForm", () => {
       expect(screen.getByRole("button", { name: "ログイン中..." })).toBeDisabled();
     });
 
-    if (!resolveSignIn) {
-      throw new Error("signIn の完了関数が設定されていません。");
-    }
-
-    const completeSignIn = resolveSignIn as (value: unknown) => void;
-    completeSignIn({
+    resolveSignIn({
       ok: true,
-      error: undefined,
+      error: null,
       status: 200,
       url: "/create"
     });
