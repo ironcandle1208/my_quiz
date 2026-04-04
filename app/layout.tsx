@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AppHeader } from "@/app/header";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -16,7 +17,10 @@ type RootLayoutProps = {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="ja">
-      <body>{children}</body>
+      <body>
+        <AppHeader />
+        {children}
+      </body>
     </html>
   );
 }

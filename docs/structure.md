@@ -22,6 +22,7 @@ my_quiz/
 │   │   ├── create-quiz-form.tsx
 │   │   └── page.tsx
 │   ├── globals.css
+│   ├── header.tsx
 │   ├── layout.tsx
 │   ├── login
 │   │   ├── login-form.tsx
@@ -44,7 +45,8 @@ my_quiz/
 │   ├── issue_report_0002.md
 │   ├── issue_report_0003.md
 │   ├── issue_report_0004.md
-│   └── issue_report_0005.md
+│   ├── issue_report_0005.md
+│   └── issue_report_0006.md
 ├── lib
 │   ├── d1.ts
 │   ├── domain.ts
@@ -66,6 +68,7 @@ my_quiz/
 │       ├── create-page-auth.test.tsx
 │       ├── create-quiz-form.test.tsx
 │       ├── d1.test.ts
+│       ├── header-auth.test.tsx
 │       ├── home-page-auth.test.tsx
 │       ├── id.test.ts
 │       ├── login-form.test.tsx
@@ -104,6 +107,7 @@ my_quiz/
 | `app/create/create-quiz-form.tsx`     | 作問フォーム本体（設問/選択肢入力、送信処理）。                |
 | `app/create/page.tsx`                 | 作問画面のページエントリ。                                     |
 | `app/globals.css`                     | アプリ全体の共通スタイル定義。                                 |
+| `app/header.tsx`                      | 認証状態に応じたログイン/ログアウト導線を表示する共通ヘッダー。|
 | `app/layout.tsx`                      | 全ページ共通レイアウト。                                       |
 | `app/login/`                          | ログイン画面関連の UI を配置。                                 |
 | `app/login/login-form.tsx`            | 認証情報入力とログイン送信を担当するフォーム。                 |
@@ -127,6 +131,7 @@ my_quiz/
 | `issues/issue_report_0003.md`         | ASSETS バインディング不足の障害記録票（ID: 0003）。            |
 | `issues/issue_report_0004.md`         | Worker エントリ未生成の障害記録票（ID: 0004）。                |
 | `issues/issue_report_0005.md`         | API 500（Cloudflare Context参照不備）の障害記録票（ID: 0005）。|
+| `issues/issue_report_0006.md`         | セッション取得例外時のフォールバック不備の障害記録票（ID: 0006）。|
 | `lib/`                                | 共通ロジックやリポジトリ層を配置。                             |
 | `lib/d1.ts`                           | D1 バインディングを解決する共通関数。                          |
 | `lib/domain.ts`                       | ドメイン型定義（作問入力、公開クイズ、回答結果など）。         |
@@ -148,6 +153,7 @@ my_quiz/
 | `test/unit/create-page-auth.test.tsx` | 作問ページの認証ガードに関する単体テスト。                     |
 | `test/unit/create-quiz-form.test.tsx` | 作問フォームの操作・送信処理に関する単体テスト。               |
 | `test/unit/d1.test.ts`                | `lib/d1.ts` の単体テスト。                                     |
+| `test/unit/header-auth.test.tsx`      | 共通ヘッダーの認証状態表示分岐に関する単体テスト。             |
 | `test/unit/home-page-auth.test.tsx`   | トップページのログイン状態表示分岐に関する単体テスト。         |
 | `test/unit/id.test.ts`                | `lib/id.ts` の単体テスト。                                     |
 | `test/unit/login-form.test.tsx`       | ログインフォームの送信・エラー表示に関する単体テスト。         |

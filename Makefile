@@ -2,7 +2,7 @@ SHELL := /bin/bash
 
 D1_DATABASE_NAME ?= my-quiz-db
 
-.PHONY: d1-migrate d1-migrate-local d1-migrate-preview d1-reset d1-reset-local d1-reset-preview d1-reinit d1-reinit-local d1-reinit-preview
+.PHONY: d1-migrate d1-migrate-local d1-migrate-preview d1-reset d1-reset-local d1-reset-preview d1-reinit d1-reinit-local d1-reinit-preview cf-build cf-dev cf-dev-build
 
 # Cloudflare 上の D1 に未適用マイグレーションを適用する。
 d1-migrate:
@@ -36,3 +36,15 @@ d1-reinit-local: d1-reset-local d1-migrate-local
 
 # Preview D1 を初期化してからマイグレーションを再適用する。
 d1-reinit-preview: d1-reset-preview d1-migrate-preview
+
+# Cloudflare Workers 向けの OpenNext ビルドを実行する。
+cf-build:
+	npm run build:cf
+
+# Cloudflare Workers 互換でローカル開発サーバーを起動する。
+cf-dev:
+	npm run dev:cf
+
+# OpenNext ビルド後に Cloudflare Workers 互換の開発サーバーを起動する。
+cf-dev-build: cf-build
+	npx wrangler dev

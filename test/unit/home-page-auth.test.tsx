@@ -10,14 +10,6 @@ vi.mock("@/auth", () => ({
   getAppSession: vi.fn()
 }));
 
-const mockLogoutButton = vi.fn(() => {
-  return <button type="button">ログアウト</button>;
-});
-
-vi.mock("@/app/logout-button", () => ({
-  LogoutButton: () => mockLogoutButton()
-}));
-
 const mockedGetAppSession = vi.mocked(getAppSession);
 
 beforeEach(() => {
@@ -29,21 +21,17 @@ afterEach(() => {
 });
 
 describe("HomePage", () => {
-  test("未ログイン時はログイン導線を表示する", async () => {
+  test("未ログイン時はログイン案内文を表示する", async () => {
     mockedGetAppSession.mockResolvedValue(null);
 
     const pageElement = await HomePage();
     render(pageElement);
 
-    const loginLink = screen.getByRole("link", { name: "ログイン" });
-    expect(loginLink).toBeInTheDocument();
-    expect(loginLink).toHaveAttribute("href", "/login");
+    expect(screen.getByText("ヘッダーのログインボタンから作問機能を利用できます。")).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "クイズを作成する" })).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "ログアウト" })).not.toBeInTheDocument();
-    expect(mockLogoutButton).not.toHaveBeenCalled();
   });
 
-  test("ログイン時は作問導線とログアウトボタンを表示する", async () => {
+  test("ログイン時は作問導線を表示する", async () => {
     mockedGetAppSession.mockResolvedValue({
       user: {
         id: "user-1",
@@ -60,8 +48,6 @@ describe("HomePage", () => {
     const createLink = screen.getByRole("link", { name: "クイズを作成する" });
     expect(createLink).toBeInTheDocument();
     expect(createLink).toHaveAttribute("href", "/create");
-    expect(screen.getByRole("button", { name: "ログアウト" })).toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: "ログイン" })).not.toBeInTheDocument();
-    expect(mockLogoutButton).toHaveBeenCalledTimes(1);
+    expect(screen.queryByText("ヘッダーのログインボタンから作問機能を利用できます。")).not.toBeInTheDocument();
   });
 });
