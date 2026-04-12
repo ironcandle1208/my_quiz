@@ -7,6 +7,7 @@
 - 正誤判定（回答送信とスコア保存）
 - ログイン（Auth.js / Credentials）
 - 新規登録（Credentials アカウント作成）
+- マイクイズ一覧（自分が作成したクイズ表示）
 
 ## 技術スタック
 
@@ -22,7 +23,7 @@
   - ユーザー名: `demo`
   - パスワード: `demo-pass`
 - 新規登録（`/register`）で作成したアカウントでもログインできます。
-- 作問画面（`/create`）と作問 API（`POST /api/quizzes`）はログイン必須です。
+- 作問画面（`/create`）とマイクイズ一覧画面（`/my-quizzes/list`）、作問 API（`POST /api/quizzes`）はログイン必須です。
 
 現行実装では新規登録ユーザーはアプリ実行中のメモリに保存されます。再起動後も保持したい場合は永続ストア導入が必要です。
 
@@ -30,6 +31,7 @@
 
 ```bash
 AUTH_SECRET=十分に長いランダム文字列
+NEXTAUTH_SECRET=AUTH_SECRET と同じ値（Auth.js v4 互換）
 AUTH_TRUST_HOST=true
 AUTH_DEMO_USERNAME=demo
 AUTH_DEMO_PASSWORD=demo-pass

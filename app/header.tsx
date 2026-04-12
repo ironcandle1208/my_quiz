@@ -15,9 +15,26 @@ export async function AppHeader() {
         <Link className="app-title" href="/">
           My Quiz
         </Link>
-        <nav className="app-header-nav" aria-label="認証メニュー">
+        <nav className="app-header-nav" aria-label="ヘッダーメニュー">
           {isLoggedIn ? (
-            <LogoutButton />
+            <>
+              <div className="app-header-dropdown">
+                <button
+                  type="button"
+                  className="app-header-dropdown-trigger"
+                  aria-haspopup="true"
+                  aria-label="マイクイズメニュー"
+                >
+                  マイクイズ
+                </button>
+                <div className="app-header-dropdown-menu" aria-label="マイクイズ">
+                  <Link className="app-header-dropdown-item" href="/my-quizzes/list">
+                    一覧
+                  </Link>
+                </div>
+              </div>
+              <LogoutButton />
+            </>
           ) : (
             <Link className="button" href="/login">
               ログイン

@@ -9,6 +9,7 @@ import {
 import type {
   AttemptResult,
   CreateQuizInput,
+  MyQuizSummary,
   PublishedQuiz,
   PublishedQuizChoice,
   PublishedQuizQuestion,
@@ -35,6 +36,16 @@ type ChoiceRow = {
   question_id: string;
   order_no: number;
   body: string;
+};
+
+type MyQuizRow = {
+  quiz_id: string;
+  title: string;
+  description: string | null;
+  status: string;
+  latest_version_no: number;
+  created_at: string;
+  updated_at: string;
 };
 
 /**
@@ -108,6 +119,41 @@ export async function createQuiz(
 
   await db.batch(statements);
   return { quizId, versionNo };
+}
+
+/**
+ * 指定したユーザーが作成したクイズの一覧を取得する。
+ */
+export async function getMyQuizzes(authorUserId: string): Promise<MyQuizSummary[]> {
+  const db = getD1Database();
+  const result = await db
+    .prepare(
+      `SELECT
+         q.id AS quiz_id,
+         q.title AS title,
+         q.description AS description,
+         q.status AS status,
+         q.created_at AS created_at,
+         q.updated_at AS updated_at,
+         COALESCE(MAX(v.version_no), 0) AS latest_version_no
+       FROM quizzes q
+       LEFT JOIN quiz_versions v ON q.id = v.quiz_id
+       WHERE q.author_user_id = ?
+       GROUP BY q.id, q.title, q.description, q.status, q.created_at, q.updated_at
+       ORDER BY q.created_at DESC, q.id DESC`,
+    )
+    .bind(authorUserId)
+    .all<MyQuizRow>();
+
+  return result.results.map((row) => ({
+    quizId: row.quiz_id,
+    title: row.title,
+    description: row.description,
+    status: row.status,
+    latestVersionNo: row.latest_version_no,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  }));
 }
 
 /**

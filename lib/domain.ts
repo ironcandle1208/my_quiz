@@ -38,6 +38,16 @@ export type PublishedQuiz = {
   questions: PublishedQuizQuestion[];
 };
 
+export type MyQuizSummary = {
+  quizId: string;
+  title: string;
+  description: string | null;
+  status: string;
+  latestVersionNo: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type SubmitAttemptInput = {
   quizId: string;
   userId?: string;

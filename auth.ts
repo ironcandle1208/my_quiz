@@ -8,6 +8,14 @@ type AuthorizedUser = {
 };
 
 /**
+ * next-auth が利用する secret を環境変数から解決する。
+ * `AUTH_SECRET` と `NEXTAUTH_SECRET` のどちらでも設定できるようにする。
+ */
+function resolveAuthSecret(): string | undefined {
+  return process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET;
+}
+
+/**
  * 認証情報の値を文字列として安全に取り出す。
  */
 function toCredentialString(value: unknown): string {
@@ -32,6 +40,7 @@ function authorizeWithCredentialValues(credentials: Record<string, unknown> | un
 }
 
 export const authOptions: NextAuthOptions = {
+  secret: resolveAuthSecret(),
   session: {
     strategy: "jwt",
   },

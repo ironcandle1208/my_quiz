@@ -1,6 +1,6 @@
 # フォルダ構成
 
-更新日: 2026-04-04
+更新日: 2026-04-12
 
 `node_modules` / `.next` / `.open-next` / `.git` は除外しています。
 
@@ -29,6 +29,9 @@ my_quiz/
 │   ├── login
 │   │   ├── login-form.tsx
 │   │   └── page.tsx
+│   ├── my-quizzes
+│   │   └── list
+│   │       └── page.tsx
 │   ├── not-found.tsx
 │   ├── logout-button.tsx
 │   ├── page.tsx
@@ -51,7 +54,8 @@ my_quiz/
 │   ├── issue_report_0003.md
 │   ├── issue_report_0004.md
 │   ├── issue_report_0005.md
-│   └── issue_report_0006.md
+│   ├── issue_report_0006.md
+│   └── issue_report_0007.md
 ├── lib
 │   ├── credential-user-store.ts
 │   ├── d1.ts
@@ -79,6 +83,7 @@ my_quiz/
 │       ├── id.test.ts
 │       ├── login-form.test.tsx
 │       ├── login-page.test.tsx
+│       ├── my-quizzes-list-page.test.tsx
 │       ├── register-form.test.tsx
 │       ├── register-page.test.tsx
 │       ├── register-route.test.ts
@@ -122,6 +127,8 @@ my_quiz/
 | `app/login/`                          | ログイン画面関連の UI を配置。                                 |
 | `app/login/login-form.tsx`            | 認証情報入力とログイン送信を担当するフォーム。                 |
 | `app/login/page.tsx`                  | ログイン画面のページエントリ。                                 |
+| `app/my-quizzes/`                     | マイクイズ関連ページを配置。                                   |
+| `app/my-quizzes/list/page.tsx`        | ログインユーザーが作成したクイズ一覧を表示するページ。         |
 | `app/not-found.tsx`                   | 404 ページ表示。                                               |
 | `app/logout-button.tsx`               | クライアント側でログアウトを実行するボタン。                   |
 | `app/page.tsx`                        | トップページ。                                                 |
@@ -145,13 +152,14 @@ my_quiz/
 | `issues/issue_report_0004.md`         | Worker エントリ未生成の障害記録票（ID: 0004）。                |
 | `issues/issue_report_0005.md`         | API 500（Cloudflare Context参照不備）の障害記録票（ID: 0005）。|
 | `issues/issue_report_0006.md`         | セッション取得例外時のフォールバック不備の障害記録票（ID: 0006）。|
+| `issues/issue_report_0007.md`         | next-auth `NO_SECRET` の障害記録票（ID: 0007）。               |
 | `lib/`                                | 共通ロジックやリポジトリ層を配置。                             |
 | `lib/credential-user-store.ts`        | Credentials 認証ユーザーの登録・認証用メモリストア。           |
 | `lib/d1.ts`                           | D1 バインディングを解決する共通関数。                          |
-| `lib/domain.ts`                       | ドメイン型定義（作問入力、公開クイズ、回答結果など）。         |
+| `lib/domain.ts`                       | ドメイン型定義（作問入力、公開クイズ、マイクイズ一覧、回答結果など）。 |
 | `lib/id.ts`                           | UUID 生成ユーティリティ。                                      |
 | `lib/quiz-core.ts`                    | 作問バリデーション、判定計算など共通ロジック。                 |
-| `lib/quiz-repository.ts`              | D1 への永続化・取得処理（作問、取得、判定保存）。              |
+| `lib/quiz-repository.ts`              | D1 への永続化・取得処理（作問、公開クイズ取得、マイクイズ取得、判定保存）。 |
 | `next-env.d.ts`                       | Next.js が生成する型定義参照ファイル。                         |
 | `next.config.ts`                      | Next.js の基本設定。                                           |
 | `open-next.config.ts`                 | OpenNext の Cloudflare 向けビルド設定。                        |
@@ -172,6 +180,7 @@ my_quiz/
 | `test/unit/id.test.ts`                | `lib/id.ts` の単体テスト。                                     |
 | `test/unit/login-form.test.tsx`       | ログインフォームの送信・エラー表示に関する単体テスト。         |
 | `test/unit/login-page.test.tsx`       | ログインページのリダイレクト・入力値受け渡しの単体テスト。     |
+| `test/unit/my-quizzes-list-page.test.tsx` | マイクイズ一覧ページの認証ガードと表示分岐の単体テスト。   |
 | `test/unit/register-form.test.tsx`    | 新規登録フォームの送信・遷移・エラー表示に関する単体テスト。   |
 | `test/unit/register-page.test.tsx`    | 新規登録ページの表示と認証済みリダイレクトの単体テスト。       |
 | `test/unit/register-route.test.ts`    | 新規登録 API のステータスとレスポンスの単体テスト。            |

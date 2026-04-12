@@ -56,6 +56,9 @@ describe("AppHeader", () => {
     const headerElement = await AppHeader();
     render(headerElement);
 
+    const myQuizLink = screen.getByRole("link", { name: "一覧" });
+    expect(myQuizLink).toBeInTheDocument();
+    expect(myQuizLink).toHaveAttribute("href", "/my-quizzes/list");
     expect(screen.getByRole("button", { name: "ログアウト" })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "ログイン" })).not.toBeInTheDocument();
     expect(mockLogoutButton).toHaveBeenCalledTimes(1);

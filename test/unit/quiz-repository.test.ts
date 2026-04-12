@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { createQuiz, getPublishedQuiz, submitAttempt } from "@/lib/quiz-repository";
+import { createQuiz, getMyQuizzes, getPublishedQuiz, submitAttempt } from "@/lib/quiz-repository";
 import { getD1Database } from "@/lib/d1";
 import { createId } from "@/lib/id";
 import type { CreateQuizInput } from "@/lib/domain";
@@ -333,6 +333,90 @@ describe("getPublishedQuiz", () => {
     mockedGetD1Database.mockReturnValue(db);
 
     await expect(getPublishedQuiz("quiz-1")).rejects.toThrowError("設問取得失敗");
+  });
+});
+
+describe("getMyQuizzes", () => {
+  test("作成者IDに一致するクイズ一覧を整形して返す", async () => {
+    const { db, preparedStatements } = createMockD1Database({
+      allResolver: (query) => {
+        if (query.includes("GROUP BY q.id")) {
+          return [
+            {
+              quiz_id: "quiz-2",
+              title: "都道府県クイズ",
+              description: null,
+              status: "published",
+              latest_version_no: 2,
+              created_at: "2026-04-10 12:34:56",
+              updated_at: "2026-04-10 12:34:56",
+            },
+            {
+              quiz_id: "quiz-1",
+              title: "歴史クイズ",
+              description: "説明です",
+              status: "published",
+              latest_version_no: 1,
+              created_at: "2026-04-01 12:34:56",
+              updated_at: "2026-04-01 12:34:56",
+            },
+          ];
+        }
+        return [];
+      },
+    });
+    mockedGetD1Database.mockReturnValue(db);
+
+    const result = await getMyQuizzes("user-1");
+
+    expect(result).toEqual([
+      {
+        quizId: "quiz-2",
+        title: "都道府県クイズ",
+        description: null,
+        status: "published",
+        latestVersionNo: 2,
+        createdAt: "2026-04-10 12:34:56",
+        updatedAt: "2026-04-10 12:34:56",
+      },
+      {
+        quizId: "quiz-1",
+        title: "歴史クイズ",
+        description: "説明です",
+        status: "published",
+        latestVersionNo: 1,
+        createdAt: "2026-04-01 12:34:56",
+        updatedAt: "2026-04-01 12:34:56",
+      },
+    ]);
+
+    const listStatement = getStatementBySqlFragment(preparedStatements, "FROM quizzes q");
+    expect(listStatement.boundValues).toEqual(["user-1"]);
+  });
+
+  test("一致するクイズがない場合は空配列を返す", async () => {
+    const { db } = createMockD1Database({
+      allResolver: () => [],
+    });
+    mockedGetD1Database.mockReturnValue(db);
+
+    const result = await getMyQuizzes("user-404");
+
+    expect(result).toEqual([]);
+  });
+
+  test("一覧取得クエリで失敗した場合は例外を送出する", async () => {
+    const { db } = createMockD1Database({
+      allResolver: (query) => {
+        if (query.includes("GROUP BY q.id")) {
+          throw new Error("一覧取得失敗");
+        }
+        return [];
+      },
+    });
+    mockedGetD1Database.mockReturnValue(db);
+
+    await expect(getMyQuizzes("user-1")).rejects.toThrowError("一覧取得失敗");
   });
 });
 
